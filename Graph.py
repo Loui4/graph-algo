@@ -1,3 +1,5 @@
+import sys
+
 class Graph:
 
     def __init__(self) -> None:
@@ -13,7 +15,6 @@ class Graph:
     def add_edge(self, node_one, node_two, weight):
 
         if node_one in self.nodes and node_two in self.nodes:
-            print("exists")
             indexOne = self.nodes.index(node_one)
             indexTwo = self.nodes.index(node_two)
 
@@ -21,8 +22,38 @@ class Graph:
         else:
             print("nodes doesn't exist")
 
+    def calculate_shortest_path(self,node_one, node_two, index = 0):
+        indexOne= self.nodes.index(node_one);
+        indexTwo = self.nodes.index(node_two)
 
+        num_vertices = len(self.graph)
 
+        distances = [sys.maxsize] * num_vertices
+        distances[indexOne] = 0
+
+        visited = [False] * num_vertices;
+
+        for _ in range(num_vertices):
+            min_distance = sys.maxsize
+            min_vertex = -1
+
+            for v in range(num_vertices):
+                if not visited[v] and distances[v] < min_distance:
+                    min_distance = distances[v]
+                    min_vertex = v
+
+            visited[min_vertex] = True
+
+            for v in range(num_vertices):
+                if not visited[v] and self.graph[min_vertex][v] > 0:
+                    new_distance = distances[min_vertex] + self.graph[min_vertex][v]
+                    if new_distance < distances[v]:
+                         distances[v] = new_distance
+
+            
+        for i, distance in enumerate(distances):
+           if i==indexTwo:
+            print(f"Shortest distance from  {self.nodes[indexOne]} to  {self.nodes[i]} is {distance}")
 
 districts = ["Nkhotakota","Salima","Ntcheu","Dedza","Lilongwe","Mchinji","Kasungu","Ntchisi","Dowa"]
 graph =Graph()
@@ -58,9 +89,10 @@ graph.add_edge(districts[8],districts[6],117)
 graph.add_edge(districts[8],districts[7],38)
 
 
+graph.calculate_shortest_path(districts[0], districts[8])
 
-for row in graph.graph:
-    for element in row:
-        print(element, end=" ")
-    print()
+# for row in graph.graph:
+#     for element in row:
+#         print(element, end=" ")
+#     print()
 
